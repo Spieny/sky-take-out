@@ -49,7 +49,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      */
     @Bean
     public Docket docket() {
-        System.out.println("准备生成接口文档");
+        log.info("准备生成接口文档");
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("苍穹外卖项目接口文档")
                 .version("2.0")
@@ -76,7 +76,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        log.info("扩展消息转换器");
+        log.info("开始扩展消息转换器");
         //创建一个消息转换器对象
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         //设置一个对象转换器
