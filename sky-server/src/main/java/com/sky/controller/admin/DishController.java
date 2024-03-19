@@ -7,6 +7,8 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishItemVO;
+import com.sky.vo.DishOverViewVO;
 import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -76,5 +78,17 @@ public class DishController {
         dishService.updateWithFlavor(dishDTO);
         return Result.success();
     }
+
+    /**
+     * 获取指定分类id的菜品列表
+     * @return
+     */
+    @GetMapping("/list")
+    public Result<List<DishVO>> getItemList(Long categoryId){
+        log.info("获取categoryId: {} 的所有菜品",categoryId);
+        List<DishVO> list = dishService.getDishListByCid(categoryId);
+        return Result.success(list);
+    }
+
 
 }

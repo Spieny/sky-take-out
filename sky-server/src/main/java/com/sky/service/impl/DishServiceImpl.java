@@ -12,12 +12,13 @@ import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,8 @@ public class DishServiceImpl implements DishService {
     private DishMapper dishMapper;
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
+    @Autowired
+    private SetmealMapper setmealMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
 
@@ -99,6 +102,7 @@ public class DishServiceImpl implements DishService {
      * @param ids
      */
     @Override
+    @Transactional
     public void deleteBatch(List<Long> ids) {
         //判断当前菜品能否删除
         for (Long id: ids){
@@ -146,5 +150,15 @@ public class DishServiceImpl implements DishService {
                 dishFlavorMapper.insertBatch(flavors);
             }
         }
+    }
+
+    /**
+     * 获取指定分类id的菜品列表
+     * @return
+     */
+    @Override
+    public List<DishVO> getDishListByCid(Long categoryId) {
+        List<DishVO> list = dishMapper.getDishListByCid(categoryId);
+        return list;
     }
 }

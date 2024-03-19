@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+
+    <insert id="insertSetmeal" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal (category_id, name, price, status, description, image, create_time, update_time, create_user, update_user) values
+            (#{categoryId},#{name},#{price},#{status},#{description},#{image},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+
+    <delete id="deleteByIds">
+        delete from setmeal where id in
+        <foreach collection="ids" item="setmealId" separator="," open="(" close=")">
+            #{setmealId}
+        </foreach>
+    </delete>
+
+    <select id="getSetmealByDishIds" resultType="java.lang.Long">
+        select setmeal_id from setmeal_dish where dish_id in
+        <foreach collection="dishIds" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+    </select>
+
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        select se.*,c.name from setmeal se
+            left outer join category c on se.category_id = c.id
+        <where>
+            <if test="name != null">and se.name like concat('%',#{name},'%')</if>
+            <if test="status != null">and se.status like concat('%',#{status},'%')</if>
+            <if test="categoryId != null">and se.category_id like concat('%',#{categoryId},'%')</if>
+        </where>
+        order by se.create_time desc
+    </select>
+</mapper>

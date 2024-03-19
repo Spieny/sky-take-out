@@ -24,4 +24,10 @@ public interface DishService {
     void deleteBatch(List<Long> ids);
 
     void updateWithFlavor(DishDTO dishDTO);
+
+    /**
+     * 获取指定分类id的菜品列表
+     * @return
+     */
+    List<DishVO> getDishListByCid(Long categoryId);
 }
