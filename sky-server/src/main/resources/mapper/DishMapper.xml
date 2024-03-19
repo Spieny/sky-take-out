@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.DishMapper">
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into dish (name, category_id, price, image, description, create_time, update_time, create_user, update_user, status)
             values (#{name},#{categoryId},#{price},#{image},#{description},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})
     </insert>
+
     <update id="startOrStopDish">
         update dish
         <set>
@@ -15,6 +17,31 @@
         </set>
         where id = #{id}
     </update>
+
+    <update id="update">
+        update dish
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from dish where id = #{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from dish where id in
+        <foreach collection="ids" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+    </delete>
+
     <select id="pageQuery" resultType="com.sky.vo.DishVO">
         select d.*,c.name as categoryName from dish d left outer join category c on d.category_id = c.id
         <where>
@@ -30,4 +57,9 @@
         </where>
         order by d.create_time desc
     </select>
+
+    <select id="getById" resultType="com.sky.entity.Dish">
+        select * from dish where id = #{id}
+    </select>
+
 </mapper>
