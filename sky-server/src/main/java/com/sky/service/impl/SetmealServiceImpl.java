@@ -6,7 +6,6 @@ import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
-import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.exception.DeletionNotAllowedException;
@@ -91,5 +90,20 @@ public class SetmealServiceImpl implements SetmealService {
         setmealVO.setSetmealDishes(list);
 
         return setmealVO;
+    }
+
+    @Override
+    @Transactional
+    public void update(SetmealDTO setmealDTO) {
+        setmealMapper.updateSetmeal(setmealDTO);
+        List<SetmealDish> dishes = setmealDTO.getSetmealDishes();
+        if(dishes != null && !dishes.isEmpty()){
+            List<Long> ids = new ArrayList<>();
+            ids.add(setmealDTO.getId());
+            //删除原套餐内容
+            setmealDishMapper.deleteByIds(ids);
+            //插入新的套餐菜品
+            setmealDishMapper.insertSetmealDishes(dishes,setmealDTO.getId());
+        }
     }
 }

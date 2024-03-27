@@ -1,9 +1,12 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.annotation.AutoFill;
+import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.enumeration.OperationType;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -27,8 +30,10 @@ public interface SetmealMapper {
     @Select("select * from setmeal_dish where setmeal_id = #{id}")
     List<SetmealDish> getSetmealDishById(Long id);
 
+    @AutoFill(OperationType.INSERT)
     void insertSetmeal(Setmeal setmeal);
 
+    @AutoFill(OperationType.UPDATE)
     @Update("update setmeal set status=#{status} where id = #{id}")
     void startOrStopDish(Integer status, Long id);
 
@@ -36,4 +41,7 @@ public interface SetmealMapper {
     Setmeal getById(Long id);
 
     void deleteByIds(List<Long> ids);
+
+    @AutoFill(OperationType.UPDATE)
+    void updateSetmeal(SetmealDTO setmealDTO);
 }

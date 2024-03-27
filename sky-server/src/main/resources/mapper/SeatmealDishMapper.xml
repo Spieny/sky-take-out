@@ -10,6 +10,18 @@
         </foreach>
     </insert>
 
+    <update id="updateSetmealDish">
+        update setmeal_dish
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="copies != null">copies = #{copies},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="dishId != null">dish_id = #{dishId},</if>
+            <if test="setmealId != null">setmeal_id = #{setmealId},</if>
+        </set>
+        where setmeal_id = #{id}
+    </update>
+
     <delete id="deleteByIds">
         delete from setmeal_dish where setmeal_id in
         <foreach collection="ids" item="setmealId" open="(" close=")" separator=",">
