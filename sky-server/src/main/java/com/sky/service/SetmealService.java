@@ -2,10 +2,10 @@ package com.sky.service;
 
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
-import com.sky.mapper.SetmealMapper;
+import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -46,4 +46,27 @@ public interface SetmealService {
      * @param setmealDTO
      */
     void update(SetmealDTO setmealDTO);
+
+    /**
+     * 根据分类id查询套餐接口
+     *
+     * @param categoryId
+     * @return
+     */
+    Setmeal getSetmealById(Integer categoryId);
+
+    /**
+     * 根据套餐的id获取
+     *
+     * @param id
+     * @return
+     */
+    List<DishItemVO> getDishesBySetmealId(Integer id);
+
+    /**
+     * 根据分类id获取所有的套餐
+     * @param categoryId
+     * @return
+     */
+    List<Setmeal> getSetmealsById(Integer categoryId);
 }

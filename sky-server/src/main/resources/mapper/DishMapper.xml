@@ -63,5 +63,10 @@
     <select id="getById" resultType="com.sky.entity.Dish">
         select * from dish where id = #{id}
     </select>
+    <select id="getDishBySetmealId" resultType="com.sky.vo.DishItemVO">
+        select sd.name, sd.copies, d.image, d.description from setmeal_dish sd
+            left join dish d on d.id = sd.dish_id
+                where sd.setmeal_id = #{id}
+    </select>
 
 </mapper>

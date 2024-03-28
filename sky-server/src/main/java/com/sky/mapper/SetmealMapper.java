@@ -37,11 +37,14 @@ public interface SetmealMapper {
     @Update("update setmeal set status=#{status} where id = #{id}")
     void startOrStopDish(Integer status, Long id);
 
-    @Select("select * from setmeal where id = #{id}")
+    @Select("select * from setmeal where category_id = #{id}")
     Setmeal getById(Long id);
 
     void deleteByIds(List<Long> ids);
 
     @AutoFill(OperationType.UPDATE)
     void updateSetmeal(SetmealDTO setmealDTO);
+
+    @Select("select * from setmeal where category_id = #{categoryId}")
+    List<Setmeal> getAllByCategoryId(Integer categoryId);
 }
