@@ -1,6 +1,5 @@
 package com.sky.controller.user;
 
-import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
@@ -10,6 +9,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/page")
     @ApiOperation("分页查询菜品")
@@ -44,9 +47,10 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
+    @Cacheable(cacheNames = "dishCache",key = "#categoryId")
     public Result<List<DishVO>> getItemList(Long categoryId){
         log.info("获取categoryId: {} 的所有菜品",categoryId);
-        List<DishVO> list = dishService.getDishListByCid(categoryId);
+        List<DishVO> list = dishService.ListByCategoryIdWithFlavor(categoryId);
         return Result.success(list);
     }
 

@@ -1,23 +1,22 @@
 package com.sky.controller.admin;
 
-import com.github.pagehelper.Page;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
-import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
-import com.sky.vo.DishItemVO;
-import com.sky.vo.DishOverViewVO;
 import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -27,9 +26,12 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostMapping()
     @ApiOperation("新增菜品")
+    @CacheEvict(cacheNames = "dishCache",allEntries = true)
     public Result save(@RequestBody DishDTO dishDTO){
         log.info("新增菜品：{}",dishDTO);
         dishService.saveWithFlavor(dishDTO);
@@ -45,6 +47,7 @@ public class DishController {
     }
 
     @PostMapping("/status/{status}")
+    @CacheEvict(cacheNames = "dishCache",allEntries = true)
     public Result startOrStop(@PathVariable Integer status,Long id){
         log.info("启用或禁用菜品id：{}",id);
         dishService.startOrStop(status,id);
@@ -61,6 +64,7 @@ public class DishController {
 
     @DeleteMapping
     @ApiOperation("菜品批量删除")
+    @CacheEvict(cacheNames = "dishCache",allEntries = true)
     public Result deleteDish(@RequestParam List<Long> ids){
         log.info("批量删除菜品，id:{}",ids);
         dishService.deleteBatch(ids);
@@ -72,6 +76,7 @@ public class DishController {
      * @return
      */
     @PutMapping
+    @CacheEvict(cacheNames = "dishCache",allEntries = true)
     public Result update(@RequestBody DishDTO dishDTO){
         log.info("修改菜品：{}",dishDTO);
         dishService.updateWithFlavor(dishDTO);
@@ -85,9 +90,8 @@ public class DishController {
     @GetMapping("/list")
     public Result<List<DishVO>> getItemList(Long categoryId){
         log.info("获取categoryId: {} 的所有菜品",categoryId);
-        List<DishVO> list = dishService.getDishListByCid(categoryId);
+        List<DishVO> list = dishService.ListByCategoryIdWithFlavor(categoryId);
         return Result.success(list);
     }
-
 
 }

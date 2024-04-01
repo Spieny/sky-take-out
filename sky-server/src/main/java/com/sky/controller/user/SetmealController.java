@@ -1,23 +1,21 @@
 package com.sky.controller.user;
 
-import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
-import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
 import com.sky.vo.DishItemVO;
-import com.sky.vo.SetmealOverViewVO;
-import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController("userSetmealController")
 @Api(tags = "套餐接口")
@@ -25,6 +23,8 @@ import java.util.List;
 @Slf4j
 public class SetmealController {
 
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private SetmealService setmealService;
 
@@ -38,8 +38,11 @@ public class SetmealController {
 
     @GetMapping("/list")
     @ApiOperation("根据分类id查询套餐接口")
+    @Cacheable(cacheNames = "setmealCache",key = "#categoryId")
     public Result<List<Setmeal>> list(Integer categoryId){
         List<Setmeal> setmeals = setmealService.getSetmealsById(categoryId);
+        /*//将套餐存入redis缓存
+        redisTemplate.opsForValue().set(key,setmeals);*/
         return Result.success(setmeals);
     }
 
@@ -49,4 +52,5 @@ public class SetmealController {
         List<DishItemVO> list = setmealService.getDishesBySetmealId(id);
         return Result.success(list);
     }
+
 }

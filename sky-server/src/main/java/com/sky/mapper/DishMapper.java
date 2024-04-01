@@ -70,7 +70,7 @@ public interface DishMapper {
      * 获取指定分类id的菜品列表
      * @return
      */
-    @Select("select * from dish where category_id = #{categoryId}")
+    @Select("select * from dish where category_id = #{categoryId} and status = 1")
     List<DishVO> getDishListByCid(Long categoryId);
 
     List<DishItemVO> getDishBySetmealId(Integer id);

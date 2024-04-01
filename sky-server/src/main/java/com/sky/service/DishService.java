@@ -29,5 +29,5 @@ public interface DishService {
      * 获取指定分类id的菜品列表
      * @return
      */
-    List<DishVO> getDishListByCid(Long categoryId);
+    List<DishVO> ListByCategoryIdWithFlavor(Long categoryId);
 }
